@@ -61,7 +61,7 @@ ota:
 
 wifi:
   ssid: "MSV2"
-  password: "sumiminivijay"
+  password: "xxx"
   ap:
     ssid: "OV3660 Fallback Hotspot"
     password: "Password123"
