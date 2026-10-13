@@ -1,0 +1,71 @@
+esphome:
+  name: esphome-web-c1a4d0
+  friendly_name: OV3660 Camera
+  platformio_options:
+    board_build.arduino.memory_type: qio_opi
+    build_flags: "-DBOARD_HAS_PSRAM"
+
+esp32:
+  board: esp32-s3-devkitc-1
+  variant: esp32s3
+  framework:
+    type: arduino
+
+# Active Octal PSRAM configuration for the 8MB chip bank
+psram:
+  mode: octal
+  speed: 80MHz
+
+# Verified I2C Engine for the Generic ESP32-S3 Dual Type-C Board
+i2c:
+  id: i2c_bus
+  sda: GPIO4
+  scl: GPIO5
+  scan: true
+
+# Exact Camera Component Pin Configuration
+esp32_camera:
+  name: My ESP32-S3 Camera
+  id: cam_module
+  i2c_id: i2c_bus
+  
+  # Structural Pin definitions mapping the integrated 24-Pin FPC interface
+  data_pins: [GPIO11, GPIO9, GPIO8, GPIO10, GPIO12, GPIO18, GPIO17, GPIO16]
+  vsync_pin: GPIO6
+  href_pin: GPIO7
+  pixel_clock_pin: GPIO13
+  
+  external_clock:
+    pin: GPIO15
+    frequency: 20MHz
+    
+  # The reset_pin line has been completely removed to fix the validation error
+  
+  resolution: 640x480     
+  jpeg_quality: 12
+  frame_buffer_count: 2
+
+# Dual-mode web server stream allocations
+esp32_camera_web_server:
+  - port: 8080
+    mode: stream
+  - port: 8081
+    mode: snapshot
+
+# Home Assistant Native API Connection
+api:
+
+# Enables Over-The-Air firmware updates through the dashboard/builder
+ota:
+  - platform: esphome
+
+wifi:
+  ssid: "MSV2"
+  password: "sumiminivijay"
+  ap:
+    ssid: "OV3660 Fallback Hotspot"
+    password: "Password123"
+
+# Enable logging
+logger:
+  level: INFO
